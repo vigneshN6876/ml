@@ -1,0 +1,243 @@
+1)SUBLIST
+list1 = [1,2,3,4,5]
+list2 = [4,5]
+if str(list2)[1:-1]  in str(list1):
+    print("found")
+else:
+    print("not found")
+____________________________________________________________
+
+2)Replace Dictionary
+marks = [
+    {"m1" : 50 , "m2" :30},
+{"m1" : 42 , "m2" :30},
+{"m1" : 60 , "m2" :30}
+]
+
+for mark in marks:
+    mark["average"] = (mark["m1"] + mark["m2"])/2
+
+print(marks)
+__________________________________________________________________________
+3)tupleManipulation
+a=(10,20,30)
+print("Tuple ",a)
+print("Type:",type(a))
+print("Accessing Index -> 1 value of tuple",a[1])
+b=('a','b','c')
+print("Concatenation",a+b)
+c=('Python')*3
+print("Repetition",c)
+print("Slicing",b[1:])
+d=[1,2,3,4]
+d=tuple(d)
+print("Type Conversion",d)
+__________________________________________________________________________
+4)Powers
+
+import numpy as np
+import pandas as pd
+arr1 = np.array([[1,2,3],[4,5,6]])
+arr2 = np.array([[7,8,9] ,[4,5,6]])
+
+ans = np.power(arr1 , arr2)
+s1 = pd.Series(arr1.flatten())
+s2 = pd.Series(arr2.flatten())
+
+res = s1.pow(s2)
+
+print(res)
+print(ans)
+
+_____________________________________________________________________________
+5)panagram
+
+import string
+
+s = "The five boxing wizards jump quickly"
+print("Yes" if set(string.ascii_lowercase) <= set(s.lower()) else "No")
+______________________________________________________________________________
+
+6)KFold
+
+from sklearn.model_selection import KFold
+from sklearn.datasets import load_iris
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+X, y = load_iris(return_X_y=True)
+
+kf = KFold(n_splits=5, shuffle=True, random_state=42)
+
+model = LogisticRegression(max_iter=200)
+
+fold = 1
+for train_index, test_index in kf.split(X):
+    X_train, X_test = X[train_index], X[test_index]
+    y_train, y_test = y[train_index], y[test_index]
+
+    
+    model.fit(X_train, y_train)
+    
+    y_pred = model.predict(X_test)
+
+    
+    acc = accuracy_score(y_test, y_pred)
+    print(f"Fold {fold}: Accuracy = {acc:.2f}")
+    fold += 1
+
+_______________________________________________________________
+7)Read Csv
+# import csv
+# 
+# with open("sample.csv" , newline = '') as file:
+#     reader = csv.reader(file)
+# 
+#     for row in reader:
+#         print(row)
+
+import pandas as pd
+
+df = pd.read_csv("sample.csv")
+
+print(df)
+___________________________________________________________
+8)KMeans
+from sklearn.cluster import KMeans
+from sklearn.datasets import make_blobs
+import matplotlib.pyplot as plt
+
+X, _ = make_blobs(n_samples=200, centers=3, cluster_std=0.6, random_state=0)
+
+
+kmeans = KMeans(n_clusters=3, random_state=0)
+kmeans.fit(X)
+
+
+centers = kmeans.cluster_centers_
+labels = kmeans.labels_
+
+
+plt.scatter(X[:, 0], X[:, 1], c=labels, cmap='rainbow')
+plt.scatter(centers[:, 0], centers[:, 1], color='black', marker='X', s=200)
+plt.show()
+
+___________________________________________________________________________________
+
+9)naviebayes
+
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score
+
+X, y = load_iris(return_X_y=True)
+
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+
+model = GaussianNB()
+
+
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+
+print("Accuracy:", accuracy_score(y_test, y_pred) * 100)
+
+
+_____________________________________________________________________________
+
+10)logisticregression
+
+
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+
+X, y = load_iris(return_X_y=True)
+
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+
+model = LogisticRegression(max_iter=200)
+    
+
+model.fit(X_train, y_train)
+
+
+y_pred = model.predict(X_test)
+
+
+print("Accuracy:", accuracy_score(y_test, y_pred) * 100)
+
+
+_____________________________________________________________________________________
+11)stackedGeneralisation
+
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import SVC
+from sklearn.ensemble import StackingClassifier
+from sklearn.metrics import accuracy_score
+
+# Load dataset
+X, y = load_iris(return_X_y=True)
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+
+base_learners = [
+    ('dt', DecisionTreeClassifier(random_state=42)),
+    ('svm', SVC(probability=True, random_state=42))
+]
+
+
+meta_learner = LogisticRegression(max_iter=200)
+
+
+stack_model = StackingClassifier(estimators=base_learners, final_estimator=meta_learner)
+
+
+stack_model.fit(X_train, y_train)
+
+
+y_pred = stack_model.predict(X_test)
+
+print("Stacking Accuracy:", accuracy_score(y_test, y_pred) * 100)
+_____________________________________________________________________
+
+12)SVM
+
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score
+
+
+X, y = load_iris(return_X_y=True)
+
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = SVC(kernel='linear')
+
+
+model.fit(X_train, y_train)
+
+
+y_pred = model.predict(X_test)
+
+
+print("SVM Accuracy:", accuracy_score(y_test, y_pred) * 100 ,"%")
+
+___________________________________________________________________________________________________
+
