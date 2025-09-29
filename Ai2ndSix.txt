@@ -1,0 +1,197 @@
+1)8 queens
+def print_board(board):
+    for row in board:
+        print(" ".join("Q" if x else "." for x in row))
+    print("\n")
+
+def is_safe(board, row, col, n):
+    # Check column
+    for i in range(row):
+        if board[i][col]:
+            return False
+ 
+    # Check left diagonal (↖)
+    for i, j in zip(range(row-1, -1, -1), range(col-1, -1, -1)):
+        if board[i][j]:
+            return False
+ 
+    # Check right diagonal (↗)
+    for i, j in zip(range(row-1, -1, -1), range(col+1, n)):
+        if board[i][j]:
+            return False
+ 
+    return True
+
+def solve_n_queens(board, row, n):
+    if row == n:  # Base case: All queens placed
+        print_board(board)
+        return
+ 
+    for col in range(n):  # Try placing queen in each column
+        if is_safe(board, row, col, n):
+            board[row][col] = 1          # Place queen
+            solve_n_queens(board, row + 1, n)  # Recur for next row
+            board[row][col] = 0          # Backtrack (remove queen)
+
+# Main
+n = 4
+board = [[0]*n for _ in range(n)]
+solve_n_queens(board, 0, n)
+
+
+
+
+2)Monkey Banana
+def monkey_banana_problem(n):
+    climbs = 0
+    bananas = 0
+    hungry = True
+    for i in range(n):
+        if hungry:
+            climbs += 1
+            bananas += 1
+            hungry = False
+        else:
+            climbs += 1
+    return climbs, bananas
+
+n = 10
+climbs, bananas = monkey_banana_problem(n)
+print(f"The Monkey made {climbs} climbs and got {bananas} bananas.")
+
+
+
+3)alpha beta pruning
+# Alpha-Beta Pruning using Minimax
+MAX, MIN = 1000, -1000
+
+def minimax(depth, nodeindex, maximizingplayer, values, alpha, beta):
+    # If leaf node, return its value
+    if depth == 3:
+        return values[nodeindex]
+
+    if maximizingplayer:
+        best = MIN
+        for i in range(2):  # two children
+            val = minimax(depth + 1, nodeindex * 2 + i, False, values, alpha, beta)
+            best = max(best, val)
+            alpha = max(alpha, best)
+            if beta <= alpha:
+                break  # beta cut-off
+        return best
+    else:
+        best = MAX
+        for i in range(2):
+            val = minimax(depth + 1, nodeindex * 2 + i, True, values, alpha, beta)
+            best = min(best, val)
+            beta = min(beta, best)  # fix here: should use 'best', not 'val'
+            if beta <= alpha:
+                break  # alpha cut-off
+        return best
+
+# Leaf node values
+values = [3, 5, 6, 9, 1, 2, 0, -1]
+
+# Call minimax starting at root
+optimal_value = minimax(0, 0, True, values, MIN, MAX)
+print("The optimal value is:", optimal_value)
+
+
+
+4)hangman
+import random
+
+def choose_word():
+    words = ["python", "hangman", "programming", "developer", "artificial", "intelligence"]
+    return random.choice(words)
+
+def hangman(secret_word):
+    guesses_left = 8
+    guessed = []
+
+    print("Welcome to Hangman!")
+    print("The word has", len(secret_word), "letters.")
+
+    while guesses_left > 0:
+        print("\nGuesses left:", guesses_left)
+        word_display = ""
+        for ch in secret_word:
+            if ch in guessed:
+                word_display += ch
+            else:
+                word_display += "_"
+        print("Word:", word_display)
+
+        guess = input("Guess a letter: ").lower()
+
+        if guess in guessed:
+            print("You already guessed that letter.")
+            continue
+
+        guessed.append(guess)
+
+        if guess in secret_word:
+            print("Good guess!")
+            if all(ch in guessed for ch in secret_word):
+                print("Congratulations! You guessed the word:", secret_word)
+                return
+        else:
+            print("Wrong guess.")
+            guesses_left -= 1
+
+    print("Sorry, you ran out of guesses. The word was:", secret_word)
+
+
+if __name__ == "__main__":
+    word = choose_word()
+    hangman(word)
+
+5)tower of Hanoi
+
+def Tower_of_hanoi(n , s , a ,d):
+    if n ==0:
+        return
+    Tower_of_hanoi(n - 1 , s , d ,a)
+    print(f"Move disk {n} from {s} to {d}")
+    Tower_of_hanoi(n - 1 , a , s ,d)
+n = 3
+Tower_of_hanoi(n , 'A' , 'B' , 'C')
+
+
+6)chatbot
+import random
+
+responses = ["hi hello", "How are you", "what do you want", "how can I help you"]
+
+def get_response():
+    return random.choice(responses)
+
+def start_bot():
+    print("Hi, I am a chatbot. Type 'exit' to quit.")
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() == "exit":
+            print("Bot: Goodbye!")
+            break
+        bot_response = get_response()
+        print("Bot:", bot_response)
+
+start_bot()
+
+7)stopwords
+
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+
+nltk.download('stopwords')
+nltk.download('punkt')
+
+text = "this is sample"
+words = word_tokenize(text)
+
+stop_words = set(stopwords.words('english'))  # Store once as a set for faster lookup
+filtered = [w for w in words if w.lower() not in stop_words]
+
+print(filtered)
+
