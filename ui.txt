@@ -1,0 +1,437 @@
+1)COMPASSCLOCK - npm create vite@latest
+	       Go to Windows Powershell Run as Administrator type --Set-ExecutionPolicy RemoteSigned(if needed)
+----------------------------------------------------------------------------------------------------------------------
+import React, { useState, useEffect } from "react";
+
+const App = () => {
+  const [time, setTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const hours = time.getHours() % 12;
+  const minutes = time.getMinutes();
+  const seconds = time.getSeconds();
+
+  const containerStyle = {
+    position: "relative",
+    width: "250px",
+    height: "250px",
+    border: "4px solid black",
+    borderRadius: "50%",
+    margin: "0 auto",
+    backgroundColor: "white",
+  };
+
+  const centerStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    width: "10px",
+    height: "10px",
+    backgroundColor: "black",
+    borderRadius: "50%",
+    transform: "translate(-50%, -50%)",
+    zIndex: 10,
+  };
+
+  const handBase = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transformOrigin: "bottom center",
+  };
+
+  return (
+    <div style={{ textAlign: "center", padding: "20px" }}>
+      <h2 style={{ fontSize: "24px", marginBottom: "10px" }}>Compass Clock</h2>
+      <div style={{ fontSize: "18px", marginBottom: "20px" }}>
+        {time.toLocaleTimeString()}
+      </div>
+
+      <div style={containerStyle}>
+       
+        <div style={{ position: "absolute", top: "5px", left: "50%", transform: "translateX(-50%)" , color : "black" }}>12</div>
+        <div style={{ position: "absolute", top: "50%", right: "5px", transform: "translateY(-50%)" ,color : "black" }}>3</div>
+        <div style={{ position: "absolute", bottom: "5px", left: "50%", transform: "translateX(-50%)" ,color : "black"  }}>6</div>
+        <div style={{ position: "absolute", top: "50%", left: "5px", transform: "translateY(-50%)" ,color : "black"  }}>9</div>
+
+        
+        <div style={{ position: "absolute", top: "-20px", left: "50%", transform: "translateX(-50%)", color: "red", fontWeight: "bold" }}>N</div>
+        <div style={{ position: "absolute", top: "50%", right: "-20px", transform: "translateY(-50%)", color: "red", fontWeight: "bold" }}>E</div>
+        <div style={{ position: "absolute", bottom: "-20px", left: "50%", transform: "translateX(-50%)", color: "red", fontWeight: "bold" }}>S</div>
+        <div style={{ position: "absolute", top: "50%", left: "-20px", transform: "translateY(-50%)", color: "red", fontWeight: "bold" }}>W</div>
+
+     
+        <div
+          style={{
+            ...handBase,
+            width: "4px",
+            height: "60px",
+            backgroundColor: "black",
+            transform: `translate(-50%, -100%) rotate(${hours * 30 + minutes / 2 - 90}deg)`,
+          }}
+        />
+
+  
+        <div
+          style={{
+            ...handBase,
+            width: "3px",
+            height: "80px",
+            backgroundColor: "blue",
+            transform: `translate(-50%, -100%) rotate(${minutes * 6 - 90}deg)`,
+          }}
+        />
+
+
+        <div
+          style={{
+            ...handBase,
+            width: "2px",
+            height: "100px",
+            backgroundColor: "red",
+            transform: `translate(-50%, -100%) rotate(${seconds * 6 - 90}deg)`,
+          }}
+        />
+
+        <div style={centerStyle}></div>
+      </div>
+    </div>
+  );
+};
+
+export default App;
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+2)Voting Sys
+-------------
+import React, { useState } from "react";
+
+function App() {
+  const [votes, setVotes] = useState({
+    candidateA: 0,
+    candidateB: 0,
+  });
+
+  const castVote = (candidate) => {
+    setVotes({
+      ...votes,
+      [candidate]: votes[candidate] + 1,
+    });
+  };
+
+  return (
+    <div style={{ textAlign: "center", padding: "50px", fontFamily: "Arial, sans-serif" }}>
+      <h1>College Voting System</h1>
+
+      <div>
+        <button onClick={() => castVote("candidateA")}>Vote for Candidate A</button>
+        <button onClick={() => castVote("candidateB")}>Vote for Candidate B</button>
+      </div>
+
+      <h2>Results:</h2>
+      <p>Candidate A: {votes.candidateA} votes</p>
+      <p>Candidate B: {votes.candidateB} votes</p>
+    </div>
+  );
+}
+
+export default App;
+----------------------------------------------------------------------------------------------------------------------------------------
+3)comet -- create html file and paste
+-----
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+  <meta charset="UTF-8" /> 
+  <title>Comet Effect</title> 
+  <style> 
+    body, html { margin: 0; padding: 0; overflow: hidden; background: black; } 
+    canvas { display: block; } 
+  </style> 
+</head> 
+<body> 
+  <script src="https://cdn.jsdelivr.net/gh/soulwire/sketch.js@master/js/sketch.min.js"></script> 
+  <script> 
+    var particles = []; 
+    var lastX = 0, lastY = 0; 
+    function Particle(x, y, dx, dy) { 
+      this.x = x; 
+      this.y = y; 
+      this.vx = dx * 0.2 + (Math.random() - 0.5) * 1.5; 
+      this.vy = dy * 0.2 + (Math.random() - 0.5) * 1.5; 
+      this.alpha = 1; 
+      this.size = Math.random() * 5 + 3; 
+    } 
+    Particle.prototype.update = function() { 
+      this.x += this.vx; 
+      this.y += this.vy; 
+      this.alpha -= 0.02; 
+      this.size *= 0.96; 
+    }; 
+    Particle.prototype.draw = function(ctx) { 
+      ctx.fillStyle = 'rgba(255, 255, 200, ' + this.alpha + ')'; 
+      ctx.beginPath(); 
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); 
+      ctx.fill(); 
+    }; 
+    Sketch.create({ 
+      setup: function() { 
+        this.background = '#000'; 
+        lastX = this.width / 2; 
+        lastY = this.height / 2; 
+      }, 
+      draw: function() { 
+        // Motion blur background 
+        this.context.fillStyle = 'rgba(0, 0, 0, 0.2)'; 
+        this.context.fillRect(0, 0, this.width, this.height); 
+        // Only spawn particles when mouse is inside canvas 
+        if (this.mouse.x !== lastX || this.mouse.y !== lastY) { 
+          var dx = this.mouse.x - lastX; 
+          var dy = this.mouse.y - lastY; 
+          for (var i = 0; i < 4; i++) { 
+            particles.push(new Particle(this.mouse.x, this.mouse.y, dx, dy)); 
+          } 
+          lastX = this.mouse.x; 
+          lastY = this.mouse.y; 
+        } 
+        // Update + draw particles 
+        for (var i = particles.length - 1; i >= 0; i--) { 
+          var p = particles[i]; 
+          p.update(); 
+          if (p.alpha <= 0 || p.size <= 0.5) { 
+            particles.splice(i, 1); 
+          } else { 
+            p.draw(this.context); 
+          } 
+        } 
+        // Bright glowing comet head 
+        if (this.mouse.x && this.mouse.y) { 
+          var gradient = this.context.createRadialGradient( 
+            this.mouse.x, this.mouse.y, 0, 
+            this.mouse.x, this.mouse.y, 60 
+          ); 
+          gradient.addColorStop(0, 'rgba(255,255,255,1)'); 
+          gradient.addColorStop(0.3, 'rgba(255,200,150,0.8)'); 
+          gradient.addColorStop(1, 'rgba(255,200,150,0)'); 
+          this.context.fillStyle = gradient; 
+          this.context.beginPath(); 
+          this.context.arc(this.mouse.x, this.mouse.y, 60, 0, Math.PI * 2); 
+          this.context.fill(); 
+        } 
+      } 
+    }); 
+  </script> 
+</body> 
+</html> 
+----------------------------------------------------------------------------------------------------------
+
+4)HEALTH REFERENCE USING ANGULAR
+-------------------------------
+<!DOCTYPE html>
+<html ng-app="app" ng-controller="c">
+  <head>
+    <meta charset="utf-8" />
+    <title>Health Reference</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f8;
+        margin: 0;
+        padding: 40px;
+        display: flex;
+        justify-content: center;
+      }
+      .container {
+        background: #fff;
+        padding: 24px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        width: 100%;
+      }
+      h2 {
+        font-size: 28px;
+        margin: 0 0 20px;
+        text-align: center;
+        color: #222;
+      }
+      .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .tabs button {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .card {
+        border: 1px solid #ddd;
+        padding: 14px;
+        border-radius: 6px;
+        margin-bottom: 10px;
+        background: #fafafa;
+        font-size: 16px;
+      }
+      .labs {
+        color: #16a34a;
+      }
+      .symptoms {
+        color: #2563eb;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h2>Health Reference</h2>
+
+      <div class="tabs">
+        <button
+          ng-click="t='labs'"
+          ng-style="{
+            'background-color': t === 'labs' ? '#3b82f6' : '#e5e7eb',
+            color: t === 'labs' ? '#fff' : '#000'
+          }"
+        >
+          Lab Reports
+        </button>
+
+        <button
+          ng-click="t='symptoms'"
+          ng-style="{
+            'background-color': t === 'symptoms' ? '#3b82f6' : '#e5e7eb',
+            color: t === 'symptoms' ? '#fff' : '#000'
+          }"
+        >
+          Symptoms
+        </button>
+      </div>
+
+      <!-- Lab Reports Section -->
+      <div ng-if="t === 'labs'">
+        <div class="card" ng-repeat="l in labs">
+          <b>{{ l.test }}</b>
+          <div class="labs">Normal: {{ l.range }}</div>
+        </div>
+      </div>
+
+      <!-- Symptoms Section -->
+      <div ng-if="t === 'symptoms'">
+        <div class="card" ng-repeat="s in symptoms">
+          <b>{{ s.symptom }}</b>
+          <div class="symptoms">{{ s.action }}</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      angular.module("app", []).controller("c", function ($scope) {
+        $scope.t = "labs";
+
+        $scope.labs = [
+          { test: "Blood Sugar", range: "70-100 mg/dL" },
+          { test: "Blood Pressure", range: "120/80 mmHg" },
+          { test: "Cholesterol", range: "<200 mg/dL" },
+        ];
+
+        $scope.symptoms = [
+          { symptom: "Fever", action: "Rest and hydrate" },
+          { symptom: "Headache", action: "Take pain relief" },
+          { symptom: "Cough", action: "Drink warm liquids" },
+        ];
+      });
+    </script>
+  </body>
+</html>
+-------------------------------------------------------------------------------------------------------------------
+5)CALC
+----
+import React, { useState } from "react";
+
+function App() {
+  // Store what the user types
+  const [input, setInput] = useState("");
+
+  // Handle what happens when a button is clicked
+  const handleClick = (value) => {
+    if (value === "C") {
+      // Clear everything
+      setInput("");
+    } else if (value === "=") {
+      // Try to calculate the result
+      try {
+        setInput(eval(input).toString());
+      } catch {
+        setInput("Error");
+      }
+    } else if (value === "←") {
+      // Delete last character
+      setInput(input.slice(0, -1));
+    } else {
+      // Add value to input
+      setInput(input + value);
+    }
+  };
+
+  return (
+    <div style={{ textAlign: "center", marginTop: "100px" }}>
+      <h2>Simple Calculator</h2>
+
+      {/* Display area */}
+      <div
+        style={{
+          width: "220px",
+          margin: "10px auto",
+          background: "black",
+          padding: "10px",
+          fontSize: "20px",
+          borderRadius: "5px",
+          textAlign: "right",
+        }}
+      >
+        {input || "0"}
+      </div>
+
+      {/* Buttons area */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 50px)",
+          gap: "10px",
+          justifyContent: "center",
+        }}
+      >
+        {["7", "8", "9", "/",
+          "4", "5", "6", "*",
+          "1", "2", "3", "-",
+          "0", ".", "=", "+",
+          "C", "←"].map((btn) => (
+          <button
+            key={btn}
+            onClick={() => handleClick(btn)}
+            style={{
+              padding: "10px",
+              fontSize: "18px",
+              borderRadius: "5px",
+              background: "black",
+              cursor: "pointer",
+            }}
+          >
+            {btn}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default App;
