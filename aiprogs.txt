@@ -1,0 +1,387 @@
+1)BFS
+------
+from collections import deque
+
+def bfs(graph, start):
+    visited = []
+    queue = deque([start])  # deque is faster for pops from the left
+
+    while queue:
+        node = queue.popleft()
+        if node not in visited:
+            print(node, end=" ")
+            visited.append(node)
+            queue.extend(graph[node])
+
+# Graph definition
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': [],
+    'E': ['F'],
+    'F': []
+}
+
+print("BFS Traversal:")
+bfs(graph , 'A')
+-----------------------------------------------------------------------------------
+2)DFS
+------
+def dfs_recursive(graph, node, visited=None):
+    if visited is None:
+        visited = set()
+        print("DFS Recursive Traversal:", end=" ")
+
+    visited.add(node)
+    print(node, end=" ")
+
+    for neighbor in graph[node]:
+        if neighbor not in visited:
+            dfs_recursive(graph, neighbor, visited)
+    if len(visited) == len(graph):
+        print()  # newline at the end
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': [],
+    'E': ['F'],
+    'F': []
+}
+dfs_recursive(graph, 'A')
+-----------------------------------------------------------------------------------------
+3)TIC TAC TOE
+--------------
+board = [str(i) for i in range(1, 10)]
+player = "X"
+
+for turn in range(9):
+    print(
+        f"\n{board[0]} | {board[1]} | {board[2]}\n{board[3]} | {board[4]} | {board[5]}\n{board[6]} | {board[7]} | {board[8]}")
+    choice = int(input(f"Player {player}, enter 1–9: "))
+
+    if board[choice - 1] in ("X", "O"):
+        print("Spot already taken! Try again.")
+        continue
+
+    board[choice - 1] = player
+
+    # Winning combinations
+    wins = [(0, 1, 2), (3, 4, 5), (6, 7, 8),
+            (0, 3, 6), (1, 4, 7), (2, 5, 8),
+            (0, 4, 8), (2, 4, 6)]
+
+    if any(board[a] == board[b] == board[c] for a, b, c in wins):
+        print(
+            f"\n{board[0]} | {board[1]} | {board[2]}\n{board[3]} | {board[4]} | {board[5]}\n{board[6]} | {board[7]} | {board[8]}")
+        print(f"🎉 Player {player} wins!")
+        break
+
+    player = "O" if player == "X" else "X"
+else:
+    print("It's a tie!")
+--------------------------------------------------------------------------------------------------------------------------------------
+4)8PUZZLE
+----------
+from collections import deque
+def solve(board):
+    start = sum(board, [])
+    goal = list(range(9))
+    if start == goal:
+        return 0
+    moves = [
+        [1, 3], [0, 2, 4], [1, 5],
+        [0, 4, 6], [1, 3, 5, 7], [2, 4, 8],
+        [3, 7], [4, 6, 8], [5, 7]
+    ]
+
+    queue = deque([(start, 0)])
+    visited = set()
+    while queue:
+        state, steps = queue.popleft()
+        if tuple(state) in visited:
+            continue
+        visited.add(tuple(state))
+
+        zero = state.index(0)
+        for move in moves[zero]:
+            new_state = state[:]
+            new_state[zero], new_state[move] = new_state[move], new_state[zero]
+            if new_state == goal:
+                return steps + 1
+            queue.append((new_state, steps + 1))
+
+    return -1
+print(solve([[3, 1, 2],
+             [4, 7, 5],
+             [6, 8, 0]]))
+-----------------------------------------------------------------------------------------------
+5)WaterJug
+-----------
+print("💧 Water Jug Problem")
+x = int(input("Enter X (initial amount in 4L jug): "))
+y = int(input("Enter Y (initial amount in 3L jug): "))
+while True:
+    print("\nRules:")
+    print("1: Fill 4L jug (X)")
+    print("2: Fill 3L jug (Y)")
+    print("5: Empty 4L jug (X)")
+    print("6: Empty 3L jug (Y)")
+    print("7: Pour Y → X until X full")
+    print("8: Pour X → Y until Y full")
+    print("9: Pour Y → X completely")
+    print("10: Pour X → Y completely")
+    rno = int(input("Enter the rule number: "))
+
+    if rno == 1 and x < 4:
+        x = 4
+    elif rno == 2 and y < 3:
+        y = 3
+    elif rno == 5 and x > 0:
+        x = 0
+    elif rno == 6 and y > 0:
+        y = 0
+    elif rno == 7 and y > 0 and x < 4:
+        pour = min(y, 4 - x)
+        x += pour
+        y -= pour
+    elif rno == 8 and x > 0 and y < 3:
+        pour = min(x, 3 - y)
+        x -= pour
+        y += pour
+    elif rno == 9 and y > 0 and x + y <= 4:
+        x += y
+        y = 0
+    elif rno == 10 and x > 0 and x + y <= 3:
+        y += x
+        x = 0
+    else:
+        print("⚠️ Invalid or inapplicable rule.")
+        continue
+
+    print(f"→ x = {x}, y = {y}")
+    if x == 2:
+        print("🎯 Goal reached! Jug X has 2 liters.")
+        break
+--------------------------------------------------------------------------------------------
+6)Travelling SALESMAN
+-------------------------
+from itertools import permutations
+d = [
+    [0, 10, 15, 20],
+    [10, 0, 35, 25],
+    [15, 35, 0, 30],
+    [20, 25, 30, 0]
+]
+best = float('inf')
+path = []
+for trip in permutations([1, 2, 3]):
+    a, b, c = trip
+    cost = d[0][a] + d[a][b] + d[b][c] + d[c][0]
+    if cost < best:
+        best = cost
+        path = trip
+
+print(f"Cost: {best}, Path: (0 -> {path[0]} -> {path[1]} -> {path[2]} -> 0)")
+---------------------------------------------------------------------------------------------------------------
+7)TOWER OF HANOI
+-----------------
+from itertools import permutations
+d = [
+    [0, 10, 15, 20],
+    [10, 0, 35, 25],
+    [15, 35, 0, 30],
+    [20, 25, 30, 0]
+]
+best = float('inf')
+path = []
+for trip in permutations([1, 2, 3]):
+    a, b, c = trip
+    cost = d[0][a] + d[a][b] + d[b][c] + d[c][0]
+    if cost < best:
+        best = cost
+        path = trip
+
+print(f"Cost: {best}, Path: (0 -> {path[0]} -> {path[1]} -> {path[2]} -> 0)")
+---------------------------------------------------------------------------------------------------------------------------
+8)MONKEY BANANA
+----------------
+def monkey_banana_problem(n):
+   climbs = 0
+   bananas = 0
+   hungry = True
+   for i in range(n):
+       if hungry:
+           climbs += 1
+           bananas += 1
+           hungry = False
+       else:
+           climbs += 1
+   return climbs, bananas
+
+n = 10
+climbs, bananas = monkey_banana_problem(n)
+print(f"The Monkey made {climbs} climbs and got {bananas} bananas.")
+-------------------------------------------------------------------------------------------------------------------------------
+9)ALPHA BETA
+-------------
+# Constants
+MAX, MIN = 1000, -1000
+
+# Minimax function with Alpha-Beta pruning
+def minimax(depth, nodeIndex, maximizingPlayer, values, alpha, beta):
+    # Leaf node reached
+    if depth == 3:
+        return values[nodeIndex]
+
+    if maximizingPlayer:
+        best = MIN
+        # Traverse two children
+        for i in range(2):
+            val = minimax(depth + 1, nodeIndex * 2 + i, False, values, alpha, beta)
+            best = max(best, val)
+            alpha = max(alpha, best)
+            # Alpha-Beta Pruning
+            if beta <= alpha:
+                break
+        return best
+    else:
+        best = MAX
+        for i in range(2):
+            val = minimax(depth + 1, nodeIndex * 2 + i, True, values, alpha, beta)
+            best = min(best, val)
+            beta = min(beta, best)
+            # Alpha-Beta Pruning
+            if beta <= alpha:
+                break
+        return best
+
+# Leaf node values of the binary tree
+values = [3, 5, 6, 9, 1, 2, 0, -1]
+
+# Compute optimal value for maximizing player at root
+optimal = minimax(0, 0, True, values, MIN, MAX)
+print("The optimal value is:", optimal)
+------------------------------------------------------------------------------------------------------------
+10)8QUEENS
+-----------
+def print_board(board):
+   for row in board:
+       print(" ".join("Q" if x else "." for x in row))
+   print("\n")
+
+def is_safe(board, row, col, n):
+   # Check column
+   for i in range(row):
+       if board[i][col]:
+           return False
+
+   # Check left diagonal (↖)
+   for i, j in zip(range(row-1, -1, -1), range(col-1, -1, -1)):
+       if board[i][j]:
+           return False
+
+   # Check right diagonal (↗)
+   for i, j in zip(range(row-1, -1, -1), range(col+1, n)):
+       if board[i][j]:
+           return False
+
+   return True
+
+def solve_n_queens(board, row, n):
+   if row == n:  # Base case: All queens placed
+       print_board(board)
+       return
+
+   for col in range(n):  # Try placing queen in each column
+       if is_safe(board, row, col, n):
+           board[row][col] = 1          # Place queen
+           solve_n_queens(board, row + 1, n)  # Recur for next row
+           board[row][col] = 0          # Backtrack (remove queen)
+
+# Main
+n = 4
+board = [[0]*n for _ in range(n)]
+solve_n_queens(board, 0, n)
+-------------------------------------------------------------------------------------------------------
+11)CHATBOT
+------------
+import random
+
+responses = ["hi hello", "How are you", "what do you want", "how can I help you"]
+
+def get_response():
+    return random.choice(responses)
+
+def start_bot():
+    print("Hi, I am a chatbot. Type 'exit' to quit.")
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() == "exit":
+            print("Bot: Goodbye!")
+            break
+        bot_response = get_response()
+        print("Bot:", bot_response)
+
+start_bot()
+---------------------------------------------------------------------------------------------------------
+12)HANGMAN
+-----------
+import random
+def choose_word():
+    words = ["python", "hangman", "programming", "developer", "artificial", "intelligence"]
+    return random.choice(words)
+def hangman(secret_word):
+    guesses_left = 8
+    guessed = []
+    print("Welcome to Hangman!")
+    print("The word has", len(secret_word), "letters.")
+    while guesses_left > 0:
+        print("\nGuesses left:", guesses_left)
+        word_display = ""
+        for ch in secret_word:
+            if ch in guessed:
+                word_display += ch
+            else:
+                word_display += "_"
+        print("Word:", word_display)
+
+        guess = input("Guess a letter: ").lower()
+
+        if guess in guessed:
+            print("You already guessed that letter.")
+            continue
+
+        guessed.append(guess)
+
+        if guess in secret_word:
+            print("Good guess!")
+            if all(ch in guessed for ch in secret_word):
+                print("Congratulations! You guessed the word:", secret_word)
+                return
+        else:
+            print("Wrong guess.")
+            guesses_left -= 1
+
+    print("Sorry, you ran out of guesses. The word was:", secret_word)
+
+if __name__ == "__main__":
+    word = choose_word()
+    hangman(word)
+----------------------------------------------------------------------------------------------------
+13)STOPWORDS
+-------------
+import nltk
+from nltk.corpus import stopwords
+nltk.download('stopwords')
+stop = set(stopwords.words('english'))
+input_path = r"file1.txt"
+output_path = r"file2.txt"
+with open(input_path, "r", encoding="utf-8") as f1, open(output_path, "w", encoding="utf-8") as f2:
+    for line in f1:
+        words = line.split()
+        filtered = [w for w in words if w.lower() not in stop]
+        f2.write(" ".join(filtered) + "\n")
+print(f"✅ Done! Output saved to {output_path}")
+-----------------------------------------------------------------------------------------------------------
